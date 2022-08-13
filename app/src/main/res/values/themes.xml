@@ -14,6 +14,7 @@
 
     <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView">
         <item name="android:textSize">@dimen/medium_text</item>
+        <item name="android:fontFamily">@font/nunito_regular</item>
     </style>
 
     <style name="LargeText" parent="@android:style/TextAppearance.Large">

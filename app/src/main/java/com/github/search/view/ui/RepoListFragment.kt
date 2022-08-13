@@ -1,14 +1,15 @@
 package com.github.search.view.ui
 
-import android.R
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.search.GithubApplication
+import com.github.search.api.Constants
 import com.github.search.api.GithubApi
 import com.github.search.databinding.FragmentRepoListBinding
 import com.github.search.models.Repo
@@ -49,7 +50,7 @@ class RepoListFragment : Fragment(), RepoListView {
     ): View {
         binding = FragmentRepoListBinding.inflate(inflater, container, false)
 
-        fetchForecast()
+        fetchRepositories(Constants.DEFAULT_QUERY)
         setupUI()
 
         return binding.root
@@ -60,6 +61,17 @@ class RepoListFragment : Fragment(), RepoListView {
     private fun setupUI() {
         binding.rvRepo.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         binding.rvRepo.adapter = mAdapter
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                fetchRepositories(query!!)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
     }
 
 
@@ -79,9 +91,9 @@ class RepoListFragment : Fragment(), RepoListView {
         }
     }
 
-    private fun fetchForecast(){
+    private fun fetchRepositories(query: String){
         showProgress()
-        viewModel.getWeatherForecast()
+        viewModel.searchGithubRepositories(query)
     }
 
 

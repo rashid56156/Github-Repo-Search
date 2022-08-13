@@ -9,7 +9,7 @@ import retrofit2.http.*
 interface GithubApi {
     @GET("repositories")
     fun searchRepositories(
-        @Query("q") query: String = Constants.DEFAULT_QUERY,
+        @Query("q") query: String,
         @Query("per_page") per_page: Int = Constants.PER_PAGE
     ): Flowable<Repo>
 

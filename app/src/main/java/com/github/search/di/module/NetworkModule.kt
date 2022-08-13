@@ -49,7 +49,7 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideContentApi(factory: GsonConverterFactory?): GithubApi {
-        return Retrofit.Builder().baseUrl(Constants.WEATHER_API)
+        return Retrofit.Builder().baseUrl(Constants.GITHUB_API)
             .client(getOkHttpClient(GithubApiInterceptor()))
             .addConverterFactory(factory!!)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

@@ -5,12 +5,55 @@
     android:layout_height="match_parent"
     android:background="@color/light_grey">
 
+    <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appbar_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ToolbarTheme"
+        app:layout_scrollFlags="scroll|enterAlways">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/LargeText"
+            android:textColor="@android:color/white"
+            android:paddingStart="@dimen/spacing_large"
+            android:paddingEnd="@dimen/spacing_large"
+            android:text="@string/app_name"
+            android:fontFamily="@font/nunito_extrabold"
+            android:layout_gravity="center" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_layout_outline"
+        app:theme="@style/SearchViewTheme"
+        app:iconifiedByDefault="false"
+        app:queryHint="@string/search_query_hint"
+        android:layout_marginTop="@dimen/search_view_padding_vertical"
+        android:layout_marginBottom="@dimen/search_view_padding_vertical"
+        android:layout_marginLeft="@dimen/search_view_padding_horizontal"
+        android:layout_marginRight="@dimen/search_view_padding_horizontal"/>
+
+</com.google.android.material.appbar.AppBarLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRepo"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appbar_layout"/>
 
     <LinearLayout
         android:id="@+id/progress"

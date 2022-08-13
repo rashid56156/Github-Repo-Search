@@ -14,8 +14,8 @@ class RepoListViewModel(private val api: GithubApi, private val mView: RepoListV
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun getWeatherForecast() {
-        compositeDisposable.add(api.searchRepositories()
+    fun searchGithubRepositories(query: String) {
+        compositeDisposable.add(api.searchRepositories(query)
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .observeOn(Schedulers.io()).subscribe({ response: Repo -> mView.didGetRepositories(response) }) { throwable: Throwable ->

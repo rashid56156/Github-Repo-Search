@@ -8,4 +8,13 @@
     <string name="repo_owner">Owner: %s</string>
     <string name="repo_size">Size: %d Kb</string>
 
+    <string name="message_welcome">Welcome to GitHub Search.\n Search your favorite repo</string>
+    <string name="message_empty_result">Search result is empty</string>
+    <string name="message_error">Oops! Something went wrong.\nPlease try again</string>
+
+    <string name="search_query_hint">Search a repo</string>
+
+    <string name="search_result_repo_count">%s repository counts</string>
+    <string name="search_result_updated_at">Updated at %s</string>
+
 </resources>
