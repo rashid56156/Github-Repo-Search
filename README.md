@@ -27,7 +27,7 @@ Dagger2 has been used for Dependency injection.
 ![Screenshot](screenshot_b.png)
 
 ## Api
-App uses [Github Search API](https://docs.github.com/en/rest/search) to fetch repositories.
+App uses [Github Search API](https://docs.github.com/en/rest/search#search-repositories) to search repositories.
 
 ## Architecture
 The project is built using MVVM pattern. MVVM allows for the separation of concern which also makes testing easier.
