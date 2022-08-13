@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="0dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_github_repo_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/nunito_extrabold"
+            android:textAppearance="@style/LargeText"
+            android:textColor="@color/colorGitHubRepoName"
+            android:textStyle="bold"
+            tools:text="Awesome Titris" />
+
+
+        <TextView
+            android:id="@+id/tv_github_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/SmallText"
+            android:fontFamily="@font/nunito_bold"
+            android:layout_marginTop="5dp"
+            tools:text="Rashid6156" />
+
+        <TextView
+            android:id="@+id/tv_github_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/SmallText"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/nunito_regular"
+            tools:text="40mb" />
+
+        <TextView
+            android:id="@+id/tv_github_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/SmallText"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/nunito_regular"
+            android:gravity="end"
+            tools:text="kotlin"
+            android:textColor="@color/colorGitHubRepoName"
+            android:textStyle="italic"/>
+
+    </LinearLayout>
+
+
+
+</androidx.cardview.widget.CardView>

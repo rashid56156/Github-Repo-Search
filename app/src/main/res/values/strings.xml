@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Github Repo Search</string>
+    <string name="loading_message">Fetching results. Please wait…</string>
+    <string name="fetching_contributors_error">There seems to be an error fetching results. Try again later</string>
+    <string name="connectivity_error">No internet connection. Try again.</string>
+    <string name="user_image_description">%s user image</string>
+
+    <string name="repo_owner">Owner: %s</string>
+    <string name="repo_size">Size: %d Kb</string>
+
 </resources>
