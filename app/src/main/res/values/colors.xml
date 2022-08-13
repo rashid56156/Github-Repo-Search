@@ -1,31 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
-    <!--Theme-->
     <color name="colorPrimary">#3F4952</color>
     <color name="colorPrimaryDark">#24292F</color>
-    <color name="colorBackground">#FFFFFF</color>
     <color name="colorAccent">#1F91DE</color>
-
-
     <color name="colorGitHubRepoName">#2759D9</color>
-    <color name="colorDivider">#e3e3e3</color>
-
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="orange">#EB842D</color>
-    <color name="green">#20CE5F</color>
-    <color name="red">#f52525</color>
     <color name="colorWhite">#FFFFFF</color>
-    <color name="colorGrey">#727272</color>
-    <color name="colorBlack">#212121</color>
     <color name="light_grey">#E0E0E0</color>
-    <color name="medium_grey">#A8A8A8</color>
-    <color name="dark_grey">#777777</color>
 </resources>
