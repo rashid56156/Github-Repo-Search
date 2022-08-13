@@ -12,6 +12,7 @@ Android Application to demonstrate the implementation of Github search API
 
 ## App
 GitHub Repo Search allows you to search for different repositories.
+
 Features:
 Search for GitHub repositories and returns a list of 10 matching repositories.
 Scroll to the bottom to fetch another 10 repositories and so on.
