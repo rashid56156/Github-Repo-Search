@@ -7,6 +7,7 @@
 
     <string name="message_fetching_error">Oops! Something went wrong.\nPlease try again</string>
     <string name="message_empty_result">There seems to be no matching repositories.</string>
+    <string name="message_query_length">Error. Query should be less than 256 characters.</string>
 
     <string name="search_query_hint">Search a repo</string>
 

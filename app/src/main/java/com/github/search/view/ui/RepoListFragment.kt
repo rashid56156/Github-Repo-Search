@@ -1,11 +1,10 @@
 package com.github.search.view.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +16,6 @@ import com.github.search.api.GithubApiService
 import com.github.search.databinding.FragmentRepoListBinding
 import com.github.search.models.RepoItem
 import com.github.search.models.RepoModel
-import com.github.search.util.AlertView
 import com.github.search.view.MainActivity
 import com.github.search.view.adapter.RepoAdapter
 import com.github.search.view.paging.PaginationScrollListener
@@ -67,8 +65,6 @@ class RepoListFragment : Fragment(), RepoListView {
         return binding.root
     }
 
-
-
     private fun setupUI() {
         binding.rvRepo.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         binding.rvRepo.adapter = mAdapter
@@ -98,14 +94,19 @@ class RepoListFragment : Fragment(), RepoListView {
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
-                query = q!!
-                mRepositories.clear()
-                mAdapter.notifyDataSetChanged()
-                fetchRepositories()
+                if(q?.length!! < 256) {
+                    query = q
+                    mRepositories.clear()
+                    mAdapter.notifyDataSetChanged()
+                    fetchRepositories()
+                } else {
+                        Toast.makeText(act, getString(R.string.message_query_length), Toast.LENGTH_SHORT).show()
+                }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+
                 binding.tvError.visibility = View.INVISIBLE
                 return false
             }
@@ -134,9 +135,9 @@ class RepoListFragment : Fragment(), RepoListView {
             isLoading = false
             binding.rvRepo.visibility = View.INVISIBLE
             binding.tvError.visibility = View.VISIBLE
-            binding.tvError.text = getString(R.string.message_fetching_error)
+            binding.tvError.text = message
             hideProgress()
-            AlertView.showErrorMsg(act, message)
+
         }
     }
 

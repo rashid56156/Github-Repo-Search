@@ -92,7 +92,6 @@ dependencies {
 
 
     //third party UI/UX Libraries
-    implementation 'com.github.tapadoo:alerter:7.2.1'
     implementation 'com.tuyenmonkey:mkloader:1.4.0'
 
 
