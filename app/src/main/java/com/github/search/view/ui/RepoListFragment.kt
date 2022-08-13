@@ -1,20 +1,13 @@
 package com.github.search.view.ui
 
+import android.R
 import android.os.Bundle
-import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import javax.inject.Inject
-import kotlin.collections.ArrayList
-import androidx.recyclerview.widget.PagerSnapHelper
-
-import androidx.recyclerview.widget.SnapHelper
-
-import android.os.Looper
 import com.github.search.GithubApplication
 import com.github.search.api.GithubApi
 import com.github.search.databinding.FragmentRepoListBinding
@@ -23,6 +16,7 @@ import com.github.search.models.RepoItem
 import com.github.search.util.AlertView
 import com.github.search.view.MainActivity
 import com.github.search.view.adapter.RepoAdapter
+import javax.inject.Inject
 
 
 class RepoListFragment : Fragment(), RepoListView {
@@ -62,12 +56,10 @@ class RepoListFragment : Fragment(), RepoListView {
     }
 
 
+
     private fun setupUI() {
         binding.rvRepo.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         binding.rvRepo.adapter = mAdapter
-
-
-        act.hideProgress()
     }
 
 
@@ -82,13 +74,13 @@ class RepoListFragment : Fragment(), RepoListView {
 
     override fun errorProcessingRequest(message: String) {
         act.runOnUiThread {
-            act.hideProgress()
+            hideProgress()
             AlertView.showErrorMsg(act, message)
         }
     }
 
     private fun fetchForecast(){
-        act.showProgress()
+        showProgress()
         viewModel.getWeatherForecast()
     }
 
@@ -97,7 +89,15 @@ class RepoListFragment : Fragment(), RepoListView {
         mRepositories.clear()
         repo.items.let { mRepositories.addAll(it!!) }
         mAdapter.notifyDataSetChanged()
-        act.hideProgress()
+        hideProgress()
+    }
+
+    private fun showProgress() {
+        binding.progress.visibility = View.VISIBLE
+    }
+
+    fun hideProgress() {
+        binding.progress.visibility = View.INVISIBLE
     }
 
 
