@@ -1,6 +1,7 @@
 package com.github.search.view.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,26 @@ class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mConte
             binding.tvGithubUser.text = binding.root.context.getString(R.string.repo_owner, mRepoItem?.owner?.login)
             binding.tvGithubSize.text =  binding.root.context.getString(R.string.repo_size, mRepoItem?.size)
             binding.tvGithubLanguage.text = mRepoItem?.language
+            binding.tvGithubWiki.text = binding.root.context.getString(R.string.repo_has_wiki, mRepoItem?.hasWiki.toString())
+
+            if(mRepoItem?.hasWiki == true) {
+                binding.root.setCardBackgroundColor(Color.WHITE)
+                binding.tvGithubRepoName.setTextColor(Color.BLACK)
+                binding.tvGithubUser.setTextColor(Color.BLACK)
+                binding.tvGithubSize.setTextColor(Color.BLACK)
+                binding.tvGithubLanguage.setTextColor(Color.BLACK)
+                binding.tvGithubWiki.setTextColor(Color.BLACK)
+
+            } else {
+                binding.root.setCardBackgroundColor(mContext.resources.getColor(R.color.colorPrimary))
+                binding.tvGithubRepoName.setTextColor(Color.WHITE)
+                binding.tvGithubUser.setTextColor(Color.WHITE)
+                binding.tvGithubSize.setTextColor(Color.WHITE)
+                binding.tvGithubLanguage.setTextColor(Color.WHITE)
+                binding.tvGithubWiki.setTextColor(Color.WHITE)
+            }
+
+
 
         }
     }

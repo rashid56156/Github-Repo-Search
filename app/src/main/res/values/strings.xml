@@ -7,6 +7,7 @@
 
     <string name="repo_owner">Owner: %s</string>
     <string name="repo_size">Size: %d Kb</string>
+    <string name="repo_has_wiki">Wiki: %s</string>
 
     <string name="message_welcome">Welcome to GitHub Search.\n Search your favorite repo</string>
     <string name="message_empty_result">Search result is empty</string>

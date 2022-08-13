@@ -50,6 +50,17 @@
             tools:text="40mb" />
 
         <TextView
+            android:id="@+id/tv_github_wiki"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/SmallText"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/nunito_regular"
+            android:paddingEnd="10dp"
+            tools:text="kotlin"
+            android:textStyle="italic"/>
+
+        <TextView
             android:id="@+id/tv_github_language"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
