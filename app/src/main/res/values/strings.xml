@@ -1,21 +1,14 @@
 <resources>
     <string name="app_name">Github Repo Search</string>
-    <string name="loading_message">Fetching results. Please wait…</string>
-    <string name="fetching_contributors_error">There seems to be an error fetching results. Try again later</string>
-    <string name="connectivity_error">No internet connection. Try again.</string>
-    <string name="user_image_description">%s user image</string>
 
     <string name="repo_owner">Owner: %s</string>
     <string name="repo_size">Size: %d Kb</string>
     <string name="repo_has_wiki">Wiki: %s</string>
 
-    <string name="message_welcome">Welcome to GitHub Search.\n Search your favorite repo</string>
-    <string name="message_empty_result">Search result is empty</string>
-    <string name="message_error">Oops! Something went wrong.\nPlease try again</string>
+    <string name="message_fetching_error">Oops! Something went wrong.\nPlease try again</string>
+    <string name="message_empty_result">There seems to be no matching repositories.</string>
 
     <string name="search_query_hint">Search a repo</string>
 
-    <string name="search_result_repo_count">%s repository counts</string>
-    <string name="search_result_updated_at">Updated at %s</string>
 
 </resources>

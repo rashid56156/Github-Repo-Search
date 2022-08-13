@@ -6,12 +6,12 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.search.GithubApplication
+import com.github.search.R
 import com.github.search.api.Constants
 import com.github.search.api.GithubApiService
 import com.github.search.databinding.FragmentRepoListBinding
@@ -107,6 +107,7 @@ class RepoListFragment : Fragment(), RepoListView {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                binding.tvError.visibility = View.INVISIBLE
                 return false
             }
         })
@@ -115,6 +116,16 @@ class RepoListFragment : Fragment(), RepoListView {
     override fun didGetRepositories(response: RepoModel) {
         act.runOnUiThread {
             isLoading = false
+            if(response.items!!.isEmpty()){
+
+                binding.rvRepo.visibility = View.INVISIBLE
+                binding.tvError.visibility = View.VISIBLE
+                binding.tvError.text = getString(R.string.message_empty_result)
+                hideProgress()
+            } else {
+                binding.rvRepo.visibility = View.VISIBLE
+                binding.tvError.visibility = View.INVISIBLE
+            }
             setupAdapter(response)
         }
     }
@@ -122,6 +133,9 @@ class RepoListFragment : Fragment(), RepoListView {
     override fun errorProcessingRequest(message: String) {
         act.runOnUiThread {
             isLoading = false
+            binding.rvRepo.visibility = View.INVISIBLE
+            binding.tvError.visibility = View.VISIBLE
+            binding.tvError.text = getString(R.string.message_fetching_error)
             hideProgress()
             AlertView.showErrorMsg(act, message)
         }
@@ -134,7 +148,6 @@ class RepoListFragment : Fragment(), RepoListView {
 
 
     private fun setupAdapter(repo: RepoModel){
-       // mRepositories.clear()
         repo.items.let { mRepositories.addAll(it!!) }
         mAdapter.notifyDataSetChanged()
         hideProgress()
