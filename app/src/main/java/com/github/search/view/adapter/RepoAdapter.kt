@@ -9,6 +9,11 @@ import com.github.search.R
 import com.github.search.databinding.ItemRepoBinding
 import com.github.search.models.RepoItem
 
+/**
+ * Adapter which manages a collection of repo model
+ * This adapter has two view types including a white background where wiki is true, while greyed background one where
+ * wiki is false
+ * */
 
 class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mContext: Context) : RecyclerView.Adapter<RepoAdapter.ViewHolder>(){
 

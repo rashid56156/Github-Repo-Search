@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.search.GithubApplication
@@ -22,6 +24,10 @@ import com.github.search.view.paging.PaginationScrollListener
 import javax.inject.Inject
 
 
+/**
+ * Fragment class through which user interacts with the app and we show the search
+ * response in this UI class as well.
+ */
 class RepoListFragment : Fragment(), RepoListView {
 
     private lateinit var binding: FragmentRepoListBinding
@@ -58,11 +64,19 @@ class RepoListFragment : Fragment(), RepoListView {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentRepoListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        /**
+         * fragment oNviewCreated is called so now we can make the network call and
+         * set up our UI as well.
+         */
         fetchRepositories()
         setupUI()
 
-        return binding.root
     }
 
     private fun setupUI() {
@@ -92,6 +106,10 @@ class RepoListFragment : Fragment(), RepoListView {
 
         })
 
+        /**
+         * Searchview that listens to the user's queries
+         */
+
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
                 if(q?.length!! < 256) {
@@ -113,11 +131,16 @@ class RepoListFragment : Fragment(), RepoListView {
         })
     }
 
-    override fun didGetRepositories(response: RepoModel) {
+    private fun fetchRepositories(){
+        showProgress()
+        viewModel.searchGithubRepositories(query, currentPage)
+    }
+
+
+    override fun didFetchRepositories(response: RepoModel) {
         act.runOnUiThread {
             isLoading = false
             if(response.items!!.isEmpty()){
-
                 binding.rvRepo.visibility = View.INVISIBLE
                 binding.tvError.visibility = View.VISIBLE
                 binding.tvError.text = getString(R.string.message_empty_result)
@@ -130,7 +153,7 @@ class RepoListFragment : Fragment(), RepoListView {
         }
     }
 
-    override fun errorProcessingRequest(message: String) {
+    override fun errorFetchingRepositories(message: String) {
         act.runOnUiThread {
             isLoading = false
             binding.rvRepo.visibility = View.INVISIBLE
@@ -141,12 +164,10 @@ class RepoListFragment : Fragment(), RepoListView {
         }
     }
 
-    private fun fetchRepositories(){
-        showProgress()
-        viewModel.searchGithubRepositories(query, currentPage)
-    }
 
-
+    /**
+     * loading the fetched repositories to the recyclerview adapter
+     */
     private fun setupAdapter(repo: RepoModel){
         repo.items.let { mRepositories.addAll(it!!) }
         mAdapter.notifyDataSetChanged()

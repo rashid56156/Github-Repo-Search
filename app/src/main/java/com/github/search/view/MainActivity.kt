@@ -1,15 +1,16 @@
 package com.github.search.view
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.WindowManager
 import com.github.search.GithubApplication
 import com.github.search.R
 import com.github.search.databinding.ActivityMainBinding
 import com.github.search.view.ui.RepoListFragment
 
+/**
+ * Main application screen. This is the app entry point.
+ * */
 class MainActivity : AppCompatActivity() {
 
     private var binding: ActivityMainBinding? = null

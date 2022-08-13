@@ -2,9 +2,12 @@ package com.github.search.view.ui
 
 import com.github.search.models.RepoModel
 
-interface RepoListView {
+/**
+ * Interface to connect our viewmodel and view classes
+ */
 
-    fun didGetRepositories(response: RepoModel)
-    fun errorProcessingRequest(message: String)
+interface RepoListView {
+    fun didFetchRepositories(response: RepoModel)
+    fun errorFetchingRepositories(message: String)
 
 }

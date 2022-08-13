@@ -1,6 +1,6 @@
 package com.github.search.view.ui
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.github.search.api.Constants
 import com.github.search.api.GithubApiService
 import com.github.search.models.ErrorResponse
@@ -11,8 +11,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-
-
+/**
+ * Viewmodel class which is responsible for making the network call and then handing over the
+ * response to the fragment.
+ */
 class RepoListViewModel(private val api: GithubApiService, private val mView: RepoListView): ViewModel(){
 
     private val compositeDisposable = CompositeDisposable()
@@ -21,14 +23,14 @@ class RepoListViewModel(private val api: GithubApiService, private val mView: Re
         compositeDisposable.add(api.searchRepositories(query, Constants.PER_PAGE, page)
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
-            .observeOn(Schedulers.io()).subscribe({ response: RepoModel -> mView.didGetRepositories(response) }) { throwable: Throwable ->
+            .observeOn(Schedulers.io()).subscribe({ response: RepoModel -> mView.didFetchRepositories(response) }) { throwable: Throwable ->
                 if (throwable is HttpException) {
                     try {
                         val errorResponse = Gson().fromJson(throwable.response().errorBody()!!.string(), ErrorResponse::class.java)
-                        mView.errorProcessingRequest(errorResponse.message.plus(". ").plus(errorResponse.errors?.get(0)?.message.toString()))
+                        mView.errorFetchingRepositories(errorResponse.message.plus(". ").plus(errorResponse.errors?.get(0)?.message.toString()))
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        mView.errorProcessingRequest(throwable.message!!)
+                        mView.errorFetchingRepositories(throwable.message!!)
                     }
                 }
                 throwable.printStackTrace()
