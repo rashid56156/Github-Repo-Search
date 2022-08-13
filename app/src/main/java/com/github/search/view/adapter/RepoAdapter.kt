@@ -9,7 +9,7 @@ import com.github.search.databinding.ItemRepoBinding
 import com.github.search.models.RepoItem
 
 
-class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mContext: Context) : RecyclerView.Adapter<RepoAdapter.ViewHolder>() {
+class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mContext: Context) : RecyclerView.Adapter<RepoAdapter.ViewHolder>(){
 
     inner class ViewHolder(val binding: ItemRepoBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -33,4 +33,5 @@ class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mConte
     override fun getItemCount(): Int {
         return mRepositories.size
     }
+
 }

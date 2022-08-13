@@ -57,6 +57,7 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/nunito_regular"
             android:gravity="end"
+            android:paddingEnd="10dp"
             tools:text="kotlin"
             android:textColor="@color/colorGitHubRepoName"
             android:textStyle="italic"/>

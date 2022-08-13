@@ -1,16 +1,17 @@
 package com.github.search.api
 
 
-import com.github.search.models.Repo
+import com.github.search.models.RepoModel
 import io.reactivex.Flowable
 import retrofit2.http.*
 
 
-interface GithubApi {
+interface GithubApiService {
     @GET("repositories")
     fun searchRepositories(
         @Query("q") query: String,
-        @Query("per_page") per_page: Int = Constants.PER_PAGE
-    ): Flowable<Repo>
+        @Query("per_page") per_page: Int,
+        @Query("page") page: Int
+    ): Flowable<RepoModel>
 
 }

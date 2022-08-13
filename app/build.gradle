@@ -64,6 +64,11 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
 
+    //paging3
+    implementation "androidx.paging:paging-runtime:2.1.2"
+    //optional dependency for RxJava support
+   // implementation "androidx.paging:paging-rxjava2-ktx:3.2.0-alpha02"
+
 
 
     // RxJava and RxAndroid

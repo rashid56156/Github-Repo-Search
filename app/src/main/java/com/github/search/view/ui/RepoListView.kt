@@ -1,10 +1,10 @@
 package com.github.search.view.ui
 
-import com.github.search.models.Repo
+import com.github.search.models.RepoModel
 
 interface RepoListView {
 
-    fun didGetRepositories(response: Repo)
+    fun didGetRepositories(response: RepoModel)
     fun errorProcessingRequest(message: String)
 
 }

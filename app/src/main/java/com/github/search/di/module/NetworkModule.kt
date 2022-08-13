@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 import com.github.search.api.Constants
-import com.github.search.api.GithubApi
+import com.github.search.api.GithubApiService
 import com.github.search.api.GithubApiInterceptor
 import dagger.Module
 import dagger.Provides
@@ -48,13 +48,13 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideContentApi(factory: GsonConverterFactory?): GithubApi {
+    fun provideContentApi(factory: GsonConverterFactory?): GithubApiService {
         return Retrofit.Builder().baseUrl(Constants.GITHUB_API)
             .client(getOkHttpClient(GithubApiInterceptor()))
             .addConverterFactory(factory!!)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
-            .create(GithubApi::class.java)
+            .create(GithubApiService::class.java)
     }
 
 
