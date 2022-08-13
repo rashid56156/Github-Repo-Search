@@ -6,9 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.search.GithubApplication
@@ -37,10 +35,11 @@ class RepoListFragment : Fragment(), RepoListView {
     private lateinit var mAdapter: RepoAdapter
 
     private var query: String = Constants.DEFAULT_QUERY
-    private var pageStart: Int = Constants.DEFAULT_PAGE
+    private var pageStart: Int = Constants.PAGE_INDEX
     private var isLoading: Boolean = false
     private var isLastPage: Boolean = false
-    private var totalPages: Int = 1
+    private var totalPages: Int = 0
+    private var maxCount: Int = Constants.MAX_RESULT_COUNT
     private var currentPage: Int = pageStart
 
 
@@ -85,7 +84,10 @@ class RepoListFragment : Fragment(), RepoListView {
 
         binding.rvRepo.addOnScrollListener(object : PaginationScrollListener(binding.rvRepo.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-                if(!isLoading) {
+
+
+
+                if(!isLoading && mRepositories.size < maxCount) {
                     isLoading = true
                     currentPage += 1
                     fetchRepositories()
@@ -116,6 +118,7 @@ class RepoListFragment : Fragment(), RepoListView {
                     query = q
                     mRepositories.clear()
                     mAdapter.notifyDataSetChanged()
+                    currentPage = pageStart
                     fetchRepositories()
                 } else {
                         Toast.makeText(act, getString(R.string.message_query_length), Toast.LENGTH_SHORT).show()
@@ -146,10 +149,15 @@ class RepoListFragment : Fragment(), RepoListView {
                 binding.tvError.text = getString(R.string.message_empty_result)
                 hideProgress()
             } else {
+                totalPages = response.totalCount ?: 0
                 binding.rvRepo.visibility = View.VISIBLE
                 binding.tvError.visibility = View.INVISIBLE
+                setupAdapter(response)
+
+
+                if(totalPages < maxCount) maxCount = totalPages
             }
-            setupAdapter(response)
+
         }
     }
 
@@ -181,6 +189,8 @@ class RepoListFragment : Fragment(), RepoListView {
     private fun hideProgress() {
         binding.progress.visibility = View.INVISIBLE
     }
+
+
 
 
 }

@@ -27,7 +27,7 @@ class RepoListViewModel(private val api: GithubApiService, private val mView: Re
                 if (throwable is HttpException) {
                     try {
                         val errorResponse = Gson().fromJson(throwable.response().errorBody()!!.string(), ErrorResponse::class.java)
-                        mView.errorFetchingRepositories(errorResponse.message.plus(". ").plus(errorResponse.errors?.get(0)?.message.toString()))
+                        mView.errorFetchingRepositories(errorResponse.message.plus(". ").plus(errorResponse.errors?.get(0)?.message ?: ""))
                     } catch (e: Exception) {
                         e.printStackTrace()
                         mView.errorFetchingRepositories(throwable.message!!)
