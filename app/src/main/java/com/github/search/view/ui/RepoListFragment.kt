@@ -75,12 +75,11 @@ class RepoListFragment : Fragment(), RepoListView {
 
         binding.rvRepo.addOnScrollListener(object : PaginationScrollListener(binding.rvRepo.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-                isLoading = true
-                currentPage += 1
-
-                Handler(Looper.myLooper()!!).postDelayed({
+                if(!isLoading) {
+                    isLoading = true
+                    currentPage += 1
                     fetchRepositories()
-                }, 1000)
+                }
             }
 
             override fun getTotalPageCount(): Int {

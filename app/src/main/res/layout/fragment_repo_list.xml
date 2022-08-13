@@ -75,7 +75,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             app:mk_color="@color/colorWhite"
-            app:mk_type="FishSpinner" />
+            app:mk_type="TwinFishesSpinner" />
 
     </LinearLayout>
 
