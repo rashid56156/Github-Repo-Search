@@ -34,7 +34,7 @@ class RepoListFragment : Fragment(), RepoListView {
     private lateinit var viewModel: RepoListViewModel
     private lateinit var mRepositories: ArrayList<RepoItem?>
     private lateinit var mAdapter: RepoAdapter
-    private lateinit var layoutManager : LinearLayoutManager
+    private lateinit var layoutManager: LinearLayoutManager
 
     private var query: String = Constants.DEFAULT_QUERY
     private var pageStart: Int = Constants.PAGE_INDEX
@@ -60,7 +60,7 @@ class RepoListFragment : Fragment(), RepoListView {
         viewModel = RepoListViewModel(api, this)
     }
 
-    
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -84,16 +84,17 @@ class RepoListFragment : Fragment(), RepoListView {
     }
 
     private fun setupUI() {
-        layoutManager =  LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         binding.rvRepo.layoutManager = layoutManager
         binding.rvRepo.adapter = mAdapter
 
-        binding.rvRepo.addOnScrollListener(object : PaginationScrollListener(binding.rvRepo.layoutManager as LinearLayoutManager) {
+        binding.rvRepo.addOnScrollListener(object :
+            PaginationScrollListener(binding.rvRepo.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-                    showProgress()
-                    isLoading = true
-                    currentPage += 1
-                    fetchRepositories()
+                showProgress()
+                isLoading = true
+                currentPage += 1
+                fetchRepositories()
             }
 
             override fun isLastPage(): Boolean {
@@ -113,15 +114,17 @@ class RepoListFragment : Fragment(), RepoListView {
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
-                if(q?.length!! < 256) {
+                if (q?.length!! < 256) {
                     showProgress()
                     query = q
-                    mRepositories.clear()
-                    mAdapter.notifyDataSetChanged()
-                    currentPage = pageStart
+                    resetPaginationParameters()
                     fetchRepositories()
                 } else {
-                        Toast.makeText(act, getString(R.string.message_query_length), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        act,
+                        getString(R.string.message_query_length),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 return false
             }
@@ -138,19 +141,18 @@ class RepoListFragment : Fragment(), RepoListView {
      * function responsible for calling viewModel function to fetch repositories
      */
 
-    private fun fetchRepositories(){
+    private fun fetchRepositories() {
         viewModel.searchGithubRepositories(query, currentPage)
     }
 
 
     override fun didFetchRepositories(response: RepoModel) {
         act.runOnUiThread {
-            isLoading = false
             /**
              * If the API response is empty, display the relevant message otherwise
              * populate the results to recyclerview adapter
              */
-            if(response.items!!.isEmpty()){
+            if (response.items!!.isEmpty()) {
                 binding.rvRepo.visibility = View.INVISIBLE
                 binding.tvError.visibility = View.VISIBLE
                 binding.tvError.text = getString(R.string.message_empty_result)
@@ -159,15 +161,12 @@ class RepoListFragment : Fragment(), RepoListView {
                 val responseCount = response.totalCount ?: 0
                 binding.rvRepo.visibility = View.VISIBLE
                 binding.tvError.visibility = View.INVISIBLE
+                if (responseCount < maxCount) maxCount = responseCount
+
                 setupAdapter(response)
-
-                /**
-                 * Setting up the last page of the pagination
-                 */
-                if(responseCount < maxCount) maxCount = responseCount
-                if( layoutManager.itemCount >= maxCount) isLastPage = true
-
             }
+
+            isLoading = false
 
         }
     }
@@ -178,9 +177,7 @@ class RepoListFragment : Fragment(), RepoListView {
     override fun errorFetchingRepositories(message: String) {
         act.runOnUiThread {
             isLoading = false
-            binding.rvRepo.visibility = View.INVISIBLE
-            binding.tvError.visibility = View.VISIBLE
-            binding.tvError.text = message
+            Toast.makeText(act, message, Toast.LENGTH_SHORT).show()
             hideProgress()
 
         }
@@ -190,12 +187,23 @@ class RepoListFragment : Fragment(), RepoListView {
     /**
      * loading the fetched repositories to the recyclerview adapter
      */
-    private fun setupAdapter(repo: RepoModel){
+    private fun setupAdapter(repo: RepoModel) {
+        //mRepositories.clear()
         repo.items.let { mRepositories.addAll(it!!) }
         mAdapter.notifyDataSetChanged()
-        if(layoutManager.itemCount > Constants.PER_PAGE) {
-            binding.rvRepo.smoothScrollToPosition(layoutManager.itemCount-Constants.PER_PAGE + 1)
+        if (layoutManager.itemCount > Constants.PER_PAGE) {
+            binding.rvRepo.smoothScrollToPosition(layoutManager.itemCount - Constants.PER_PAGE + 1)
         }
+
+        /**
+         * Setting up the last page of the pagination
+         */
+        if (layoutManager.itemCount >= maxCount) isLastPage = true
+
+        Log.e("Max Count", maxCount.toString())
+        Log.e("LM SIze", layoutManager.itemCount.toString())
+        Log.e("Last Page", isLastPage.toString())
+
         hideProgress()
     }
 
@@ -207,7 +215,13 @@ class RepoListFragment : Fragment(), RepoListView {
         binding.progress.visibility = View.INVISIBLE
     }
 
-
+    private fun resetPaginationParameters(){
+        isLastPage = false
+        maxCount = Constants.MAX_RESULT_COUNT
+        currentPage = pageStart
+        mRepositories.clear()
+        mAdapter.notifyDataSetChanged()
+    }
 
 
 }

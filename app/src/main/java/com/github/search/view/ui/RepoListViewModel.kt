@@ -32,6 +32,8 @@ class RepoListViewModel(private val api: GithubApiService, private val mView: Re
                         e.printStackTrace()
                         mView.errorFetchingRepositories(throwable.message!!)
                     }
+                } else {
+                    mView.errorFetchingRepositories(throwable.message!!)
                 }
                 throwable.printStackTrace()
             })
