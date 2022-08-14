@@ -17,6 +17,7 @@ import com.github.search.api.GithubApiService
 import com.github.search.databinding.FragmentRepoListBinding
 import com.github.search.models.RepoItem
 import com.github.search.models.RepoModel
+import com.github.search.util.ConnectionChecker
 import com.github.search.view.MainActivity
 import com.github.search.view.adapter.RepoAdapter
 import com.github.search.view.paging.PaginationScrollListener
@@ -77,8 +78,17 @@ class RepoListFragment : Fragment(), RepoListView {
          * fragment onViewCreated is called so now we can make the network call and
          * set up our UI as well.
          */
-        showProgress()
-        fetchRepositories()
+        if(ConnectionChecker.isNetworkConnected(act)){
+            showProgress()
+            fetchRepositories()
+        } else {
+            Toast.makeText(
+                act,
+                getString(R.string.message_no_connection),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
         setupUI()
 
     }
@@ -91,10 +101,12 @@ class RepoListFragment : Fragment(), RepoListView {
         binding.rvRepo.addOnScrollListener(object :
             PaginationScrollListener(binding.rvRepo.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-                showProgress()
-                isLoading = true
-                currentPage += 1
-                fetchRepositories()
+                if(ConnectionChecker.isNetworkConnected(act)) {
+                    showProgress()
+                    isLoading = true
+                    currentPage += 1
+                    fetchRepositories()
+                }
             }
 
             override fun isLastPage(): Boolean {
@@ -108,12 +120,13 @@ class RepoListFragment : Fragment(), RepoListView {
         })
 
         /**
-         * searchview that listens to the user's queries.
+         * searchView that listens to the user's queries.
          * it will make a new fetch call as soon as user submits new query
          */
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
+                if(ConnectionChecker.isNetworkConnected(act)){
                 if (q?.length!! < 256) {
                     showProgress()
                     query = q
@@ -123,6 +136,12 @@ class RepoListFragment : Fragment(), RepoListView {
                     Toast.makeText(
                         act,
                         getString(R.string.message_query_length),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } } else {
+                    Toast.makeText(
+                        act,
+                        getString(R.string.message_no_connection),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -194,15 +213,10 @@ class RepoListFragment : Fragment(), RepoListView {
         if (layoutManager.itemCount > Constants.PER_PAGE) {
             binding.rvRepo.smoothScrollToPosition(layoutManager.itemCount - Constants.PER_PAGE + 1)
         }
-
         /**
          * Setting up the last page of the pagination
          */
         if (layoutManager.itemCount >= maxCount) isLastPage = true
-
-        Log.e("Max Count", maxCount.toString())
-        Log.e("LM SIze", layoutManager.itemCount.toString())
-        Log.e("Last Page", isLastPage.toString())
 
         hideProgress()
     }
