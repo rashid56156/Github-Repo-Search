@@ -46,6 +46,12 @@ class NetworkModule {
         return Cache(httpCacheDirectory, cacheSize)
     }
 
+
+    /**
+     * We need to create the Retrofit instance to send the network requests.
+     * we need to use the Retrofit Builder class and specify the base URL for the service.
+     */
+
     @Provides
     @Singleton
     fun provideContentApi(factory: GsonConverterFactory?): GithubApiService {

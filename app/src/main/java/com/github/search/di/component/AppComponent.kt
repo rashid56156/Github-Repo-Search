@@ -7,6 +7,10 @@ import dagger.Component
 
 import javax.inject.Singleton
 
+/**
+ * Dagger component interface. Here we will define the activities/fragments/classes where
+ * we need to use DI to inject dependencies.
+ */
 
 @Singleton
 @Component(modules = [AppModule::class, NetworkModule::class])

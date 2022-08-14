@@ -3,6 +3,9 @@ package com.github.search.view.paging
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * pagination listener to manage lazy/endless loading
+ */
 
 abstract class PaginationScrollListener (layoutManager: LinearLayoutManager) : RecyclerView.OnScrollListener() {
 
@@ -23,7 +26,6 @@ abstract class PaginationScrollListener (layoutManager: LinearLayoutManager) : R
     }
 
     protected abstract fun loadMoreItems()
-    abstract fun getTotalPageCount(): Int
     abstract fun isLastPage(): Boolean
     abstract fun isLoading(): Boolean
 }

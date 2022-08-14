@@ -10,7 +10,7 @@ import com.github.search.databinding.ItemRepoBinding
 import com.github.search.models.RepoItem
 
 /**
- * Adapter which manages a collection of repo model
+ * Recyclerview Adapter which manages a collection of repo model
  * This adapter has two view types including a white background where wiki is true, while greyed background one where
  * wiki is false
  * */
@@ -31,7 +31,6 @@ class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mConte
             binding.tvGithubRepoName.text =  mRepoItem?.name
             binding.tvGithubUser.text = binding.root.context.getString(R.string.repo_owner, mRepoItem?.owner?.login)
             binding.tvGithubSize.text =  binding.root.context.getString(R.string.repo_size, mRepoItem?.size)
-            binding.tvGithubLanguage.text = mRepoItem?.language
             binding.tvGithubWiki.text = binding.root.context.getString(R.string.repo_has_wiki, mRepoItem?.hasWiki.toString())
 
             if(mRepoItem?.hasWiki == true) {
@@ -39,7 +38,6 @@ class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mConte
                 binding.tvGithubRepoName.setTextColor(Color.BLACK)
                 binding.tvGithubUser.setTextColor(Color.BLACK)
                 binding.tvGithubSize.setTextColor(Color.BLACK)
-                binding.tvGithubLanguage.setTextColor(Color.BLACK)
                 binding.tvGithubWiki.setTextColor(Color.BLACK)
 
             } else {
@@ -47,7 +45,6 @@ class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mConte
                 binding.tvGithubRepoName.setTextColor(Color.WHITE)
                 binding.tvGithubUser.setTextColor(Color.WHITE)
                 binding.tvGithubSize.setTextColor(Color.WHITE)
-                binding.tvGithubLanguage.setTextColor(Color.WHITE)
                 binding.tvGithubWiki.setTextColor(Color.WHITE)
             }
 

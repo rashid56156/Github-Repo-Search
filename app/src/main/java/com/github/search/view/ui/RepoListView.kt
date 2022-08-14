@@ -9,5 +9,4 @@ import com.github.search.models.RepoModel
 interface RepoListView {
     fun didFetchRepositories(response: RepoModel)
     fun errorFetchingRepositories(message: String)
-
 }

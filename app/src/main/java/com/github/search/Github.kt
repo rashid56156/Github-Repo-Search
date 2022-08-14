@@ -7,7 +7,7 @@ import com.github.search.di.module.AppModule
 import com.github.search.di.module.NetworkModule
 
 
-class GithubApplication : Application() {
+class Github : Application() {
 
     init{
         instance_ = this
@@ -22,7 +22,7 @@ class GithubApplication : Application() {
 
     companion object {
         private var component: AppComponent? = null
-        private lateinit var instance_: GithubApplication
+        private lateinit var instance_: Github
 
         fun getInstance() = instance_
 

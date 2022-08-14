@@ -60,18 +60,6 @@
             tools:text="kotlin"
             android:textStyle="italic"/>
 
-        <TextView
-            android:id="@+id/tv_github_language"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/SmallText"
-            android:layout_marginTop="5dp"
-            android:fontFamily="@font/nunito_regular"
-            android:gravity="end"
-            android:paddingEnd="10dp"
-            tools:text="kotlin"
-            android:textColor="@color/colorGitHubRepoName"
-            android:textStyle="italic"/>
 
     </LinearLayout>
 

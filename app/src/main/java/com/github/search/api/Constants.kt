@@ -1,8 +1,5 @@
 package com.github.search.api
 
-
-
-
 object Constants {
 
     const val GITHUB_API = "https://api.github.com/search/"

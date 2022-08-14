@@ -5,6 +5,10 @@ import com.github.search.models.RepoModel
 import io.reactivex.Flowable
 import retrofit2.http.*
 
+/**
+ * Api endpoints are defined inside of this interface using
+ * retrofit annotations to encode details about the parameters and request method.
+ */
 
 interface GithubApiService {
     @GET("repositories")
