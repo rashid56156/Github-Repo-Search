@@ -1,18 +1,8 @@
 package com.github.search.view.ui
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.github.search.api.Constants
-import com.github.search.models.ErrorResponse
-import com.github.search.models.RepoItem
 import com.github.search.models.RepoModel
 import com.github.search.models.RepoRepository
-import com.github.search.util.Event
-import com.google.gson.Gson
-import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
