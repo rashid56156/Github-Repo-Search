@@ -15,7 +15,10 @@ import com.github.search.models.RepoItem
  * wiki is false
  * */
 
-class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mContext: Context) : RecyclerView.Adapter<RepoAdapter.ViewHolder>(){
+class RepoAdapter() : RecyclerView.Adapter<RepoAdapter.ViewHolder>(){
+
+
+    private var mRepositories = mutableListOf<RepoItem>()
 
     inner class ViewHolder(val binding: ItemRepoBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -28,29 +31,19 @@ class RepoAdapter(private val mRepositories: List<RepoItem?>, private val mConte
         with(holder) {
             val mRepoItem = mRepositories[position]
 
-            binding.tvGithubRepoName.text =  mRepoItem?.name
-            binding.tvGithubUser.text = binding.root.context.getString(R.string.repo_owner, mRepoItem?.owner?.login)
-            binding.tvGithubSize.text =  binding.root.context.getString(R.string.repo_size, mRepoItem?.size)
-            binding.tvGithubWiki.text = binding.root.context.getString(R.string.repo_has_wiki, mRepoItem?.hasWiki.toString())
-
-            if(mRepoItem?.hasWiki == true) {
-                binding.root.setCardBackgroundColor(Color.WHITE)
-                binding.tvGithubRepoName.setTextColor(Color.BLACK)
-                binding.tvGithubUser.setTextColor(Color.BLACK)
-                binding.tvGithubSize.setTextColor(Color.BLACK)
-                binding.tvGithubWiki.setTextColor(Color.BLACK)
-
-            } else {
-                binding.root.setCardBackgroundColor(mContext.resources.getColor(R.color.colorPrimary))
-                binding.tvGithubRepoName.setTextColor(Color.WHITE)
-                binding.tvGithubUser.setTextColor(Color.WHITE)
-                binding.tvGithubSize.setTextColor(Color.WHITE)
-                binding.tvGithubWiki.setTextColor(Color.WHITE)
-            }
-
-
-
+            binding.tvGithubRepoName.text =  mRepoItem.name
+            binding.tvGithubUser.text = binding.root.context.getString(R.string.repo_owner, mRepoItem.owner?.login)
+            binding.tvGithubSize.text =  binding.root.context.getString(R.string.repo_size, mRepoItem.size)
+            binding.tvGithubWiki.text = binding.root.context.getString(R.string.repo_has_wiki, mRepoItem.hasWiki.toString())
         }
+    }
+
+    fun updateData(newData: List<RepoItem>) {
+        mRepositories.addAll(newData)
+        notifyDataSetChanged()
+    }
+    fun clearData() {
+        mRepositories.clear()
     }
 
     override fun getItemCount(): Int {

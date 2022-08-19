@@ -3,6 +3,8 @@ package com.github.search.api
 
 import com.github.search.models.RepoModel
 import io.reactivex.Flowable
+import kotlinx.coroutines.Deferred
+import retrofit2.Response
 import retrofit2.http.*
 
 /**
@@ -12,10 +14,10 @@ import retrofit2.http.*
 
 interface GithubApiService {
     @GET("repositories")
-    fun searchRepositories(
+   suspend fun searchRepositoriesAsync(
         @Query("q") query: String,
-        @Query("per_page") per_page: Int,
+        @Query("per_page") per_page: Int = Constants.PER_PAGE,
         @Query("page") page: Int
-    ): Flowable<RepoModel>
+    ): RepoModel
 
 }

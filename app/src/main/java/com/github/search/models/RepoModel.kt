@@ -2,7 +2,8 @@ package com.github.search.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
+import kotlinx.android.parcel.Parcelize
+
 
 
 /**
@@ -18,7 +19,7 @@ data class RepoModel(
 	val incompleteResults: Boolean? = null,
 
 	@field:SerializedName("items")
-	val items: List<RepoItem?>? = null
+	val items: List<RepoItem>
 ) : Parcelable
 
 @Parcelize

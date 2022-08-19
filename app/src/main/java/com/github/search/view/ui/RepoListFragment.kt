@@ -8,16 +8,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.search.Github
 import com.github.search.R
 import com.github.search.api.Constants
-import com.github.search.api.GithubApiService
 import com.github.search.databinding.FragmentRepoListBinding
-import com.github.search.models.RepoItem
-import com.github.search.models.RepoModel
-import com.github.search.util.ConnectionChecker
+import com.github.search.util.ConnectivityLiveData
 import com.github.search.view.MainActivity
 import com.github.search.view.adapter.RepoAdapter
 import com.github.search.view.paging.PaginationScrollListener
@@ -28,12 +27,11 @@ import javax.inject.Inject
  * Fragment class through which user interacts with the app and we show the search
  * response in this UI class as well.
  */
-class RepoListFragment : Fragment(), RepoListView {
+class RepoListFragment : Fragment() {
 
     private lateinit var binding: FragmentRepoListBinding
     private lateinit var act: MainActivity
-    private lateinit var viewModel: RepoListViewModel
-    private lateinit var mRepositories: ArrayList<RepoItem?>
+    private lateinit var viewModel: RepoViewModel
     private lateinit var mAdapter: RepoAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
@@ -43,22 +41,25 @@ class RepoListFragment : Fragment(), RepoListView {
     private var isLastPage: Boolean = false
     private var maxCount: Int = Constants.MAX_RESULT_COUNT
     private var currentPage: Int = pageStart
+    private var isNetworkAvailable: Boolean = false
 
-
-    /**
-     * injecting our API dependency
-     */
 
     @Inject
-    lateinit var api: GithubApiService
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var connectivityLiveData: ConnectivityLiveData
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Github.getComponent().inject(this)
         act = activity as MainActivity
-        mRepositories = arrayListOf()
-        mAdapter = RepoAdapter(mRepositories, act)
-        viewModel = RepoListViewModel(api, this)
+
+        connectivityLiveData = ConnectivityLiveData(Github.getInstance())
+
+        viewModel = ViewModelProvider(act, viewModelFactory)[RepoViewModel::class.java]
+
     }
 
 
@@ -78,22 +79,45 @@ class RepoListFragment : Fragment(), RepoListView {
          * fragment onViewCreated is called so now we can make the network call and
          * set up our UI as well.
          */
-        if(ConnectionChecker.isNetworkConnected(act)){
-            showProgress()
-            fetchRepositories()
-        } else {
-            Toast.makeText(
-                act,
-                getString(R.string.message_no_connection),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        setupUI()
+        initialiseObservers()
+        initialiseUIElements()
 
     }
 
-    private fun setupUI() {
+    private fun initialiseObservers() {
+
+        viewModel.repoMediatorData.observe(viewLifecycleOwner, Observer {
+            mAdapter.updateData(it.items)
+            val responseCount = it .totalCount ?: 0
+            maxCount = responseCount.coerceAtMost(maxCount)
+            if (layoutManager.itemCount > Constants.PER_PAGE) {
+                binding.rvRepo.smoothScrollToPosition(layoutManager.itemCount - Constants.PER_PAGE + 1)
+            }
+            /**
+             * Setting up the last page of the pagination
+             */
+            if (layoutManager.itemCount >= maxCount) isLastPage = true
+
+        })
+
+        viewModel.repoLoadingStateLiveData.observe(viewLifecycleOwner, Observer {
+            onRepoLoadingStateChanged(it)
+        })
+
+        connectivityLiveData.observe(viewLifecycleOwner, Observer { isAvailable ->
+            isNetworkAvailable = isAvailable
+            when (isAvailable) {
+                true -> viewModel.onFragmentReady()
+
+
+                else -> {}
+            }
+        })
+    }
+
+
+    private fun initialiseUIElements() {
+        mAdapter = RepoAdapter()
         layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         binding.rvRepo.layoutManager = layoutManager
         binding.rvRepo.adapter = mAdapter
@@ -101,11 +125,11 @@ class RepoListFragment : Fragment(), RepoListView {
         binding.rvRepo.addOnScrollListener(object :
             PaginationScrollListener(binding.rvRepo.layoutManager as LinearLayoutManager) {
             override fun loadMoreItems() {
-                if(ConnectionChecker.isNetworkConnected(act)) {
-                    showProgress()
+                if (isNetworkAvailable) {
+                    binding.progress.visibility = View.VISIBLE
                     isLoading = true
-                    currentPage += 1
-                    fetchRepositories()
+                    currentPage++
+                    viewModel.onSearchQuery(query)
                 }
             }
 
@@ -126,115 +150,54 @@ class RepoListFragment : Fragment(), RepoListView {
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
-                if(ConnectionChecker.isNetworkConnected(act)){
-                if (q?.length!! < 256) {
-                    showProgress()
-                    query = q
-                    resetPaginationParameters()
-                    fetchRepositories()
-                } else {
-                    Toast.makeText(
-                        act,
-                        getString(R.string.message_query_length),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } } else {
-                    Toast.makeText(
-                        act,
-                        getString(R.string.message_no_connection),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if(isNetworkAvailable) {
+                    binding.progress.visibility = View.VISIBLE
+                    query = q!!
+                    isLastPage = false
+                    maxCount = Constants.MAX_RESULT_COUNT
+                    currentPage = pageStart
+                    mAdapter.clearData()
+                    viewModel.onSearchQuery(query)
                 }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-
                 binding.tvError.visibility = View.INVISIBLE
                 return false
             }
         })
     }
 
-    /**
-     * function responsible for calling viewModel function to fetch repositories
-     */
 
-    private fun fetchRepositories() {
-        viewModel.searchGithubRepositories(query, currentPage)
-    }
+    private fun onRepoLoadingStateChanged(state: RepoLoadingState) {
+        when (state) {
+            RepoLoadingState.LOADING -> {
+                binding.progress.visibility = View.VISIBLE
+            }
+            RepoLoadingState.LOADED -> {
+                connectivityLiveData.value?.let {
+                    if (it) {
+                        binding.rvRepo.visibility = View.VISIBLE
+                        binding.tvError.visibility = View.INVISIBLE
+                    } else {
+                        binding.rvRepo.visibility = View.INVISIBLE
+                        binding.tvError.visibility = View.VISIBLE
+                        binding.tvError.text = getString(R.string.message_empty_result)
+                    }
 
-
-    override fun didFetchRepositories(response: RepoModel) {
-        act.runOnUiThread {
-            /**
-             * If the API response is empty, display the relevant message otherwise
-             * populate the results to recyclerview adapter
-             */
-            if (response.items!!.isEmpty()) {
-                binding.rvRepo.visibility = View.INVISIBLE
+                    isLoading = false
+                }
+                binding.progress.visibility = View.INVISIBLE
+            }
+            RepoLoadingState.ERROR -> {
+                isLoading = false
+                binding.rvRepo.visibility = View.GONE
                 binding.tvError.visibility = View.VISIBLE
-                binding.tvError.text = getString(R.string.message_empty_result)
-                hideProgress()
-            } else {
-                val responseCount = response.totalCount ?: 0
-                binding.rvRepo.visibility = View.VISIBLE
-                binding.tvError.visibility = View.INVISIBLE
-                if (responseCount < maxCount) maxCount = responseCount
-
-                setupAdapter(response)
+                binding.progress.visibility = View.INVISIBLE
             }
 
-            isLoading = false
-
         }
-    }
-
-    /**
-     * Error fetching the response from API so display the error message
-     */
-    override fun errorFetchingRepositories(message: String) {
-        act.runOnUiThread {
-            isLoading = false
-            Toast.makeText(act, message, Toast.LENGTH_SHORT).show()
-            hideProgress()
-
-        }
-    }
-
-
-    /**
-     * loading the fetched repositories to the recyclerview adapter
-     */
-    private fun setupAdapter(repo: RepoModel) {
-        //mRepositories.clear()
-        repo.items.let { mRepositories.addAll(it!!) }
-        mAdapter.notifyDataSetChanged()
-        if (layoutManager.itemCount > Constants.PER_PAGE) {
-            binding.rvRepo.smoothScrollToPosition(layoutManager.itemCount - Constants.PER_PAGE + 1)
-        }
-        /**
-         * Setting up the last page of the pagination
-         */
-        if (layoutManager.itemCount >= maxCount) isLastPage = true
-
-        hideProgress()
-    }
-
-    private fun showProgress() {
-        binding.progress.visibility = View.VISIBLE
-    }
-
-    private fun hideProgress() {
-        binding.progress.visibility = View.INVISIBLE
-    }
-
-    private fun resetPaginationParameters(){
-        isLastPage = false
-        maxCount = Constants.MAX_RESULT_COUNT
-        currentPage = pageStart
-        mRepositories.clear()
-        mAdapter.notifyDataSetChanged()
     }
 
 

@@ -58,7 +58,7 @@ class NetworkModule {
         return Retrofit.Builder().baseUrl(Constants.GITHUB_API)
             .client(getOkHttpClient(GithubApiInterceptor()))
             .addConverterFactory(factory!!)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+           // .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
             .create(GithubApiService::class.java)
     }

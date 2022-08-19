@@ -19,8 +19,9 @@ Search for GitHub repositories and returns a list of 10 matching repositories.
 Scroll to the bottom to fetch another 10 repositories and so on.
 
 ## TechStack
-The project uses Kotlin language. For network requests, it uses Retrofit with RxJava.
+The project uses Kotlin language. For network requests, it uses Retrofit for network calls.
 Dagger2 has been used for Dependency injection.
+LiveData and Kotlin Coroutines are also used in the project.
 
 ## Screenshots
 ![Screenshot](screenshot_a.png)
@@ -35,7 +36,6 @@ The project is built using MVVM pattern. MVVM allows for the separation of conce
 ## Libraries
 Libraries used in the whole application are:
 
-- [RxJava](https://github.com/ReactiveX/RxJava) - RxJava is a Java VM implementation of Reactive Extensions: a library for composing asynchronous and event-based programs by using observable sequences.
 - [Dagger2](https://dagger.dev/dev-guide/) - Used for Dependency injection
 - [Retrofit](https://square.github.io/retrofit/) - Turns your HTTP API into a Java interface.
 
