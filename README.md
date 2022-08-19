@@ -25,6 +25,8 @@ It uses Retrofit for network calls.
 
 Dagger2 is used for Dependency injection.
 
+Paging2 Library is used for lazy loading.
+
 LiveData and Kotlin Coroutines are also used in the project.
 
 ## Screenshots
