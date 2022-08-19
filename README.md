@@ -19,9 +19,12 @@ Search for GitHub repositories and returns a list of 10 matching repositories.
 Scroll to the bottom to fetch another 10 repositories and so on.
 
 ## TechStack
-The project uses Kotlin language. 
+The project uses Kotlin language.
+
 It uses Retrofit for network calls.
+
 Dagger2 is used for Dependency injection.
+
 LiveData and Kotlin Coroutines are also used in the project.
 
 ## Screenshots
