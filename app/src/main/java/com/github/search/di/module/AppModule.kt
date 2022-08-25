@@ -16,7 +16,7 @@ class AppModule(application: Application) {
 
     @Provides
     @Singleton
-    fun providesApplication(): Application? {
+    fun providesApplicationContext(): Application? {
         return mApplication
     }
 

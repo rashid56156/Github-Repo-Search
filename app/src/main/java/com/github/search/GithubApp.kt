@@ -7,7 +7,7 @@ import com.github.search.di.module.AppModule
 import com.github.search.di.module.NetworkModule
 
 
-class Github : Application() {
+class GithubApp : Application() {
 
     init{
         instance_ = this
@@ -22,7 +22,7 @@ class Github : Application() {
 
     companion object {
         private var component: AppComponent? = null
-        private lateinit var instance_: Github
+        private lateinit var instance_: GithubApp
 
         fun getInstance() = instance_
 
@@ -36,11 +36,10 @@ class Github : Application() {
             component = null
         }
 
-        fun createDaggerComponent(): AppComponent {
-            return DaggerAppComponent.builder().appModule(AppModule(getInstance())).networkModule(
-                NetworkModule()
-            ).build()
-        }
+        fun createDaggerComponent(): AppComponent =
+            DaggerAppComponent.builder().appModule(AppModule(getInstance())).networkModule(
+                NetworkModule()) .build()
+
 
 
 

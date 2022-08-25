@@ -10,6 +10,6 @@ class RepoRepository @Inject constructor(private val apiService: GithubApiServic
   }
 
   suspend fun fetchTopRepos(): RepoModel {
-    return apiService.searchRepositoriesAsync("q=stars:>1", Constants.PER_PAGE, Constants.PAGE_INDEX)
+    return apiService.searchRepositoriesAsync("q=stars:5", Constants.PER_PAGE, Constants.PAGE_INDEX)
   }
 }

@@ -3,7 +3,7 @@ package com.github.search.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.WindowManager
-import com.github.search.Github
+import com.github.search.GithubApp
 import com.github.search.R
 import com.github.search.databinding.ActivityMainBinding
 import com.github.search.view.ui.RepoListFragment
@@ -29,12 +29,13 @@ class MainActivity : AppCompatActivity() {
 
         val fm = supportFragmentManager
         fm.beginTransaction().add(R.id.frameContainer, RepoListFragment()).commit()
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
         binding = null
-        Github.clearComponent()
+        GithubApp.clearComponent()
     }
 
 

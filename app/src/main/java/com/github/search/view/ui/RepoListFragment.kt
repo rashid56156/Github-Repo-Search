@@ -1,6 +1,7 @@
 package com.github.search.view.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.github.search.Github
+import com.github.search.GithubApp
 import com.github.search.R
 import com.github.search.api.Constants
 import com.github.search.databinding.FragmentRepoListBinding
@@ -41,20 +42,19 @@ class RepoListFragment : Fragment() {
     private var currentPage: Int = pageStart
     private var isNetworkAvailable: Boolean = false
 
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var connectivityLiveData: ConnectivityLiveData
+    lateinit var connectivityLiveData: ConnectivityLiveData
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Github.getComponent().inject(this)
+        GithubApp.getComponent().inject(this)
         act = activity as MainActivity
 
-        connectivityLiveData = ConnectivityLiveData(Github.getInstance())
+        connectivityLiveData = ConnectivityLiveData(GithubApp.getInstance())
 
         viewModel = ViewModelProvider(act, viewModelFactory)[RepoViewModel::class.java]
 
@@ -85,16 +85,26 @@ class RepoListFragment : Fragment() {
     private fun initialiseObservers() {
 
         viewModel.repoMediatorData.observe(viewLifecycleOwner, Observer {
-            mAdapter.updateData(it.items)
-            val responseCount = it .totalCount ?: 0
-            maxCount = responseCount.coerceAtMost(maxCount)
-            if (layoutManager.itemCount > Constants.PER_PAGE) {
-                binding.rvRepo.smoothScrollToPosition(layoutManager.itemCount - Constants.PER_PAGE + 1)
+            val responseCount = it.totalCount ?: 0
+            if (responseCount > 0) {
+                mAdapter.updateData(it.items)
+                binding.rvRepo.visibility = View.VISIBLE
+                binding.tvError.visibility = View.INVISIBLE
+
+                maxCount = responseCount.coerceAtMost(maxCount)
+                if (layoutManager.itemCount > Constants.PER_PAGE) {
+                    binding.rvRepo.smoothScrollToPosition(layoutManager.itemCount - Constants.PER_PAGE + 1)
+                }
+                /**
+                 * Setting up the last page of the pagination
+                 */
+                if (layoutManager.itemCount >= maxCount) isLastPage = true
+            } else {
+                Log.e("Fragment", "Data is here")
+                binding.rvRepo.visibility = View.GONE
+                binding.tvError.visibility = View.VISIBLE
+                binding.tvError.text = getString(R.string.message_empty_result)
             }
-            /**
-             * Setting up the last page of the pagination
-             */
-            if (layoutManager.itemCount >= maxCount) isLastPage = true
 
         })
 
@@ -148,7 +158,7 @@ class RepoListFragment : Fragment() {
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(q: String?): Boolean {
-                if(isNetworkAvailable) {
+                if (isNetworkAvailable) {
                     binding.progress.visibility = View.VISIBLE
                     query = q!!
                     isLastPage = false

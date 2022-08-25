@@ -23,8 +23,7 @@ internal annotation class ViewModelKey(val value: KClass<out ViewModel>)
 
 @Singleton
 class ViewModelFactory @Inject constructor(
-    private val viewModels: MutableMap<Class<out ViewModel>, Provider<ViewModel>>) :
-    Factory {
+    private val viewModels: MutableMap<Class<out ViewModel>, Provider<ViewModel>>) : Factory {
 
   override fun <T : ViewModel> create(modelClass: Class<T>): T =
       viewModels[modelClass]?.get() as T

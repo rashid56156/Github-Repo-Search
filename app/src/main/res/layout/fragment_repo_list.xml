@@ -42,6 +42,7 @@
         app:theme="@style/SearchViewTheme"
         app:iconifiedByDefault="false"
         app:queryHint="@string/search_query_hint"
+
         android:layout_marginTop="@dimen/search_view_padding_vertical"
         android:layout_marginBottom="@dimen/search_view_padding_vertical"
         android:layout_marginLeft="@dimen/search_view_padding_horizontal"
@@ -52,10 +53,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvRepo"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/appbar_layout"/>
+        android:layout_below="@id/appbar_layout"
+        android:layout_marginTop="5dp" />
 
     <LinearLayout
         android:id="@+id/progress"

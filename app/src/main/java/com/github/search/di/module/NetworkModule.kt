@@ -64,21 +64,13 @@ class NetworkModule {
     }
 
 
-    private fun getOkHttpClient(interceptor: Interceptor?): OkHttpClient {
+    private fun getOkHttpClient(interceptor: Interceptor): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
-        return if (interceptor == null) {
-            OkHttpClient.Builder()
-                .connectTimeout(60, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .addInterceptor(loggingInterceptor)
-                .build()
-        } else {
-            OkHttpClient.Builder().addInterceptor(interceptor)
+        return OkHttpClient.Builder().addInterceptor(interceptor)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
                 .build()
         }
-    }
 }
