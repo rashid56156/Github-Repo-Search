@@ -15,9 +15,7 @@ import retrofit2.http.*
 interface GithubApiService {
     @GET("repositories")
    suspend fun searchRepositoriesAsync(
-        @Query("q") query: String,
-        @Query("per_page") per_page: Int = Constants.PER_PAGE,
-        @Query("page") page: Int
+        @Query("q") query: String
     ): RepoModel
 
 }

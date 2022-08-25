@@ -13,12 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.search.GithubApp
 import com.github.search.R
-import com.github.search.api.Constants
 import com.github.search.databinding.FragmentRepoListBinding
 import com.github.search.util.ConnectivityLiveData
 import com.github.search.view.MainActivity
 import com.github.search.view.adapter.RepoAdapter
-import com.github.search.view.paging.PaginationScrollListener
 import javax.inject.Inject
 
 
@@ -34,12 +32,7 @@ class RepoListFragment : Fragment() {
     private lateinit var mAdapter: RepoAdapter
     private lateinit var layoutManager: LinearLayoutManager
 
-    private var query: String = Constants.DEFAULT_QUERY
-    private var pageStart: Int = Constants.PAGE_INDEX
-    private var isLoading: Boolean = false
-    private var isLastPage: Boolean = false
-    private var maxCount: Int = Constants.MAX_RESULT_COUNT
-    private var currentPage: Int = pageStart
+    lateinit var query: String
     private var isNetworkAvailable: Boolean = false
 
     @Inject
@@ -88,19 +81,11 @@ class RepoListFragment : Fragment() {
             val responseCount = it.totalCount ?: 0
             if (responseCount > 0) {
                 mAdapter.updateData(it.items)
+                binding.rvRepo.smoothScrollToPosition(0);
                 binding.rvRepo.visibility = View.VISIBLE
                 binding.tvError.visibility = View.INVISIBLE
 
-                maxCount = responseCount.coerceAtMost(maxCount)
-                if (layoutManager.itemCount > Constants.PER_PAGE) {
-                    binding.rvRepo.smoothScrollToPosition(layoutManager.itemCount - Constants.PER_PAGE + 1)
-                }
-                /**
-                 * Setting up the last page of the pagination
-                 */
-                if (layoutManager.itemCount >= maxCount) isLastPage = true
             } else {
-                Log.e("Fragment", "Data is here")
                 binding.rvRepo.visibility = View.GONE
                 binding.tvError.visibility = View.VISIBLE
                 binding.tvError.text = getString(R.string.message_empty_result)
@@ -130,27 +115,6 @@ class RepoListFragment : Fragment() {
         binding.rvRepo.layoutManager = layoutManager
         binding.rvRepo.adapter = mAdapter
 
-        binding.rvRepo.addOnScrollListener(object :
-            PaginationScrollListener(binding.rvRepo.layoutManager as LinearLayoutManager) {
-            override fun loadMoreItems() {
-                if (isNetworkAvailable) {
-                    binding.progress.visibility = View.VISIBLE
-                    isLoading = true
-                    currentPage++
-                    viewModel.onSearchQuery(query)
-                }
-            }
-
-            override fun isLastPage(): Boolean {
-                return isLastPage
-            }
-
-            override fun isLoading(): Boolean {
-                return isLoading
-            }
-
-        })
-
         /**
          * searchView that listens to the user's queries.
          * it will make a new fetch call as soon as user submits new query
@@ -161,10 +125,6 @@ class RepoListFragment : Fragment() {
                 if (isNetworkAvailable) {
                     binding.progress.visibility = View.VISIBLE
                     query = q!!
-                    isLastPage = false
-                    maxCount = Constants.MAX_RESULT_COUNT
-                    currentPage = pageStart
-                    mAdapter.clearData()
                     viewModel.onSearchQuery(query)
                 }
                 return false
@@ -193,13 +153,10 @@ class RepoListFragment : Fragment() {
                         binding.tvError.visibility = View.VISIBLE
                         binding.tvError.text = getString(R.string.message_empty_result)
                     }
-
-                    isLoading = false
                 }
                 binding.progress.visibility = View.INVISIBLE
             }
             RepoLoadingState.ERROR -> {
-                isLoading = false
                 binding.rvRepo.visibility = View.GONE
                 binding.tvError.visibility = View.VISIBLE
                 binding.progress.visibility = View.INVISIBLE

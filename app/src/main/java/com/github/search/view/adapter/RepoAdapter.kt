@@ -29,9 +29,6 @@ class RepoAdapter() : RecyclerView.Adapter<RepoAdapter.ViewHolder>(){
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             val mRepoItem = mRepositories[position]
-
-
-
             binding.tvGithubRepoName.text =  mRepoItem.name
             binding.tvGithubUser.text = binding.root.context.getString(R.string.repo_owner, mRepoItem.owner?.login)
             binding.tvGithubSize.text =  binding.root.context.getString(R.string.repo_size, mRepoItem.size)
@@ -40,11 +37,9 @@ class RepoAdapter() : RecyclerView.Adapter<RepoAdapter.ViewHolder>(){
     }
 
     fun updateData(newData: List<RepoItem>) {
+        mRepositories.clear()
         mRepositories.addAll(newData)
         notifyDataSetChanged()
-    }
-    fun clearData() {
-        mRepositories.clear()
     }
 
     override fun getItemCount(): Int {
